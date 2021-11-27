@@ -1,0 +1,1490 @@
+USE [egeyapi_MSCRM]
+
+musteri contact
+telefongorusmesi phonecall
+webform
+satis
+satisfirsati
+proje
+daire
+
+
+/****** Script for SelectTopNRows command from SSMS  ******/
+SELECT 
+	--count(new_haberdarolmasebebiidName)
+	--count([new_haberdaraltsebepidName])
+	--,count(FirstName)
+	new_haberdaraltsebepidName
+  FROM [egeyapi_MSCRM].[dbo].[Contact]
+  where 1=1
+  --and new_haberdarolmasebebiidName is null
+  and FirstName is not null
+
+No column name)	(No column name)
+11064				737091
+
+
+--sms------------------------------------------------------------------------------
+
+SELECT
+distinct 
+
+replace(
+replace(
+replace(MobilePhone,' ','')
+,'(','')
+,')','')
+
+SMS
+
+FROM [egeyapi_MSCRM].[dbo].[Contact] c
+  inner join [egeyapi_MSCRM].[dbo].new_ipo i 
+  on new_izinkanali=1 and i.new_izindurum <>2 AND c.ContactId=i.new_contactid 
+  where 1=1
+  and MobilePhone is not null
+  and MobilePhone not like ''
+  and MobilePhone <> '0'
+  and MobilePhone <> '000000'
+  and MobilePhone <> '0000000000'
+order by SMS
+
+--mailling------------------------------------------------------------------------------------------------------
+
+SELECT distinct REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+ RTRIM(LTRIM(LOWER([EMailAddress1]))),' ',''),'ğ','g'),'ü','u'),'ı','i'),'ş','s'),'ö','o'),'ç','c') EMailAddress1
+	  --select * 
+  FROM [egeyapi_MSCRM].[dbo].[Contact] c
+  inner join [egeyapi_MSCRM].[dbo].new_ipo i 
+  on new_izinkanali=2 and i.new_izindurum <>2 AND c.ContactId=i.new_contactid 
+  where 1=1
+  and [EMailAddress1] is not null
+  --and [EMailAddress1] <>''
+  --and [EMailAddress1] not like'%-%'
+  and [EMailAddress1] not like '%,,,%'
+  and [EMailAddress1] not like'%..%'
+  and [EMailAddress1] not like  '%??%'
+  --and [EMailAddress1] not like '[^??]%'
+  and [EMailAddress1] not like '%mailyok%'
+  and [EMailAddress1] not like '%000%'
+  and [EMailAddress1] not like '@%'
+  and [EMailAddress1] not like '%@'
+  and [EMailAddress1] like '%@%'
+  --and [EMailAddress1] not like 'ü'  
+  --and [EMailAddress1] not like 'ğ' 
+  --and [EMailAddress1] not like 'ç' 
+  --and [EMailAddress1] not like 'ş' 
+  --and [EMailAddress1] not like 'ı'  
+  --and [EMailAddress1] not like 'ö'
+  --and [EMailAddress1] not like '% %'
+  and [EMailAddress1] <> '@'
+  --and [EMailAddress1] = '  ayhan_sanci@hotmailcom '
+  --or [EMailAddress1] = '  ayhan_sanci@hotmail.com '
+  order by [EMailAddress1]
+
+
+--Calling-------------------------------------------------------------------------------------------------------
+
+
+SELECT
+distinct 
+
+
+
+replace(
+replace(
+replace(MobilePhone,' ','')
+,'(','')
+,')','')
+
+Calling
+
+FROM [egeyapi_MSCRM].[dbo].[Contact] c
+  inner join [egeyapi_MSCRM].[dbo].new_ipo i 
+  on new_izinkanali=3 and i.new_izindurum <>2 AND c.ContactId=i.new_contactid 
+  where 1=1
+  and MobilePhone is not null
+  and MobilePhone not like ''
+  and MobilePhone <> '0'
+  and MobilePhone <> '000000'
+  and MobilePhone <> '0000000000'
+order by Calling
+
+
+------------------------------IYS DATA ESLEŞTIRME-------------------------------------------------------
+
+SELECT * 
+  FROM [TEST].[dbo].[PhoneNumbers]
+  WHERE 1=1
+  AND phone = '905325653987'
+
+  select top 10 c.MobilePhone, p.phone, c.YomiFullName from egeyapi_MSCRM.dbo.Contact c
+  inner join [TEST].[dbo].[PhoneNumbers] p on c.MobilePhone = p.phone collate Turkish_CS_AI
+  where 1=1
+  and p.phone is not null
+  
+
+   select top 10 MobilePhone from egeyapi_MSCRM.dbo.Contact c
+   where 1=1
+   and MobilePhone = '05325653987'
+
+   SELECT distinct phone collate Turkish_CS_AI
+	FROM [TEST].[dbo].[PhoneNumbers] 
+   INTERSECT
+   select  '9'+LTRIM(MobilePhone)
+   from egeyapi_MSCRM.dbo.Contact c
+   where 1=1
+   --and MobilePhone is not null
+   --and MobilePhone <> ''
+
+
+select distinct c.MobilePhone Egeyapi, p.phone Log_Kayit, c.YomiFullName
+ -- ,case when i.new_izindurum = 1 then 'Izinli'
+	--	when i.new_izindurum = 2 then 'Izinsiz'
+	--	else 'Belirsiz'
+	--end as EgeYapi_Izin_Durumu
+  from egeyapi_MSCRM.dbo.Contact c
+  inner join [TEST].[dbo].[PhoneNumbers] p on '9'+LTRIM(MobilePhone) = p.phone collate Turkish_CS_AI
+  --inner join [egeyapi_MSCRM].[dbo].new_ipo i 
+  --on new_izinkanali=3 
+  --and i.new_izindurum =2 --izinli olmayanlar
+  --AND c.ContactId=i.new_contactid 
+  where 1=1
+  and p.phone is not null<
+
+
+to do lıstesındekı ıslere zaman atama
+erman bey crm uzmanı
+
+-----------------------------------arama,sms,mailing sorgusu----------------------------------
+
+SELECT
+UPPER(FullName) FullName,
+MobilePhone,
+EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS],
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+
+FROM Contact c
+
+
+select top 10 *
+FROM Contact c
+inner join new_ipo i on c.ContactId=i.new_contactid  --and new_izinkanali=1  
+ORDER BY i.CreatedOn DESC
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+from [ContactBase] 
+    left join [CustomerAddressBase] XXaddress1 on ([ContactBase].[ContactId] = XXaddress1.ParentId and XXaddress1.AddressNumber = 1)
+    left join [CustomerAddressBase] XXaddress2 on ([ContactBase].[ContactId] = XXaddress2.ParentId and XXaddress2.AddressNumber = 2)
+    left join [CustomerAddressBase] XXaddress3 on ([ContactBase].[ContactId] = XXaddress3.ParentId and XXaddress3.AddressNumber = 3)
+    left join [ContactBase] [contact_master_contact] on ([ContactBase].[MasterId] = [contact_master_contact].[ContactId])
+    left join [LeadBase] [contact_originating_lead] on ([ContactBase].[OriginatingLeadId] = [contact_originating_lead].[LeadId])
+    left join [EquipmentBase] [equipment_contacts] on ([ContactBase].[PreferredEquipmentId] = [equipment_contacts].[EquipmentId])
+    left join [ImageDescriptor] [lk_contact_entityimage] on ([ContactBase].[EntityImageId] = [lk_contact_entityimage].[ImageDescriptorId])
+    left join [SystemUserBase] [lk_contactbase_createdby] with(nolock) on ([ContactBase].[CreatedBy] = [lk_contactbase_createdby].[SystemUserId])
+    left join [SystemUserBase] [lk_contactbase_createdonbehalfby] with(nolock) on ([ContactBase].[CreatedOnBehalfBy] = [lk_contactbase_createdonbehalfby].[SystemUserId])
+    left join [SystemUserBase] [lk_contactbase_modifiedby] with(nolock) on ([ContactBase].[ModifiedBy] = [lk_contactbase_modifiedby].[SystemUserId])
+    left join [SystemUserBase] [lk_contactbase_modifiedonbehalfby] with(nolock) on ([ContactBase].[ModifiedOnBehalfBy] = [lk_contactbase_modifiedonbehalfby].[SystemUserId])
+    left join [ExternalPartyBase] [lk_externalparty_contact_createdby] on ([ContactBase].[CreatedByExternalParty] = [lk_externalparty_contact_createdby].[ExternalPartyId])
+    left join [ExternalPartyBase] [lk_externalparty_contact_modifiedby] on ([ContactBase].[ModifiedByExternalParty] = [lk_externalparty_contact_modifiedby].[ExternalPartyId])
+    left join [BusinessUnitBase] [new_businessunit_contact_businessunitid] on ([ContactBase].[new_businessunitid] = [new_businessunit_contact_businessunitid].[BusinessUnitId])
+    left join [ContactBase] [new_contact_contact_contactid2] on ([ContactBase].[new_contactid2] = [new_contact_contact_contactid2].[ContactId])
+    left join [ContactBase] [new_contact_contact_contactid3] on ([ContactBase].[new_contactid3] = [new_contact_contact_contactid3].[ContactId])
+    left join [ContactBase] [new_contact_contact_contactid4] on ([ContactBase].[new_contactid4] = [new_contact_contact_contactid4].[ContactId])
+    left join [new_daireBase] [new_new_daire_contact_daireid] on ([ContactBase].[new_daireid] = [new_new_daire_contact_daireid].[new_daireId])
+    left join [new_futboltakimBase] [new_new_futboltakim_contact_futboltakimid] on ([ContactBase].[new_futboltakimid] = [new_new_futboltakim_contact_futboltakimid].[new_futboltakimId])
+    left join [new_gazeteBase] [new_new_gazete_contact_gazeteid] on ([ContactBase].[new_gazeteid] = [new_new_gazete_contact_gazeteid].[new_gazeteId])
+    left join [new_haberdaraltsebepBase] [new_new_haberdaraltsebep_contact_AltHaberdarOlmaSebebi] on ([ContactBase].[new_haberdaraltsebepid] = [new_new_haberdaraltsebep_contact_AltHaberdarOlmaSebebi].[new_haberdaraltsebepId])
+    left join [new_haberdaraltsebepBase] [new_new_haberdaraltsebep_contact_haberdaraltsebepid2] on ([ContactBase].[new_haberdaraltsebepid2] = [new_new_haberdaraltsebep_contact_haberdaraltsebepid2].[new_haberdaraltsebepId])
+    left join [new_haberdarolmasebebiBase] [new_new_haberdarolmasebebi_contact_haberdarolmasebebiid2] on ([ContactBase].[new_haberdarolmasebebiid2] = [new_new_haberdarolmasebebi_contact_haberdarolmasebebiid2].[new_haberdarolmasebebiId])
+    left join [new_haberdarolmasebebiBase] [new_new_haberdarolmasebebi_contact_MHaberdarOlmaSeb] on ([ContactBase].[new_haberdarolmasebebiid] = [new_new_haberdarolmasebebi_contact_MHaberdarOlmaSeb].[new_haberdarolmasebebiId])
+    left join [new_ilBase] [new_new_il_contact_il] on ([ContactBase].[new_il] = [new_new_il_contact_il].[new_ilId])
+    left join [new_ilBase] [new_new_il_contact_il2] on ([ContactBase].[new_il2] = [new_new_il_contact_il2].[new_ilId])
+    left join [new_ilceBase] [new_new_ilce_contact_ilce] on ([ContactBase].[new_ilce] = [new_new_ilce_contact_ilce].[new_ilceId])
+    left join [new_ilceBase] [new_new_ilce_contact_ilce2] on ([ContactBase].[new_ilce2] = [new_new_ilce_contact_ilce2].[new_ilceId])
+    left join [new_meslekBase] [new_new_meslek_contact_meslekid] on ([ContactBase].[new_meslekid] = [new_new_meslek_contact_meslekid].[new_meslekId])
+    left join [new_networkBase] [new_new_network_contact_networkid] on ([ContactBase].[new_networkid] = [new_new_network_contact_networkid].[new_networkId])
+    left join [new_networkBase] [new_new_network_contact_networkid2] on ([ContactBase].[new_networkid2] = [new_new_network_contact_networkid2].[new_networkId])
+    left join [new_projeBase] [new_new_proje_contact_projeid] on ([ContactBase].[new_projeid] = [new_new_proje_contact_projeid].[new_projeId])
+    left join [new_referansidBase] [new_new_referansid_contact_Referans] on ([ContactBase].[new_Referansid] = [new_new_referansid_contact_Referans].[new_referansidId])
+    left join [new_satisfirsatBase] [new_new_satisfirsat_contact_satisfirsatid] on ([ContactBase].[new_satisfirsatid] = [new_new_satisfirsat_contact_satisfirsatid].[new_satisfirsatId])
+    left join [new_tvkanalBase] [new_new_tvkanal_contact_tvkanalid] on ([ContactBase].[new_tvkanalid] = [new_new_tvkanal_contact_tvkanalid].[new_tvkanalId])
+    left join [new_ulkeBase] [new_new_ulke_contact_ulke2] on ([ContactBase].[new_ulke2] = [new_new_ulke_contact_ulke2].[new_ulkeId])
+    left join [new_ulkeBase] [new_new_ulke_contact_ulkeid] on ([ContactBase].[new_ulkeid] = [new_new_ulke_contact_ulkeid].[new_ulkeId])
+    left join [new_webformBase] [new_new_webform_contact_webformid] on ([ContactBase].[new_webformid] = [new_new_webform_contact_webformid].[new_webformId])
+    left join [new_websiteBase] [new_new_website_contact_websiteid] on ([ContactBase].[new_websiteid] = [new_new_website_contact_websiteid].[new_websiteId])
+    left join [new_yenimeslekBase] [new_new_yenimeslek_contact_yenimeslekid] on ([ContactBase].[new_yenimeslekid] = [new_new_yenimeslek_contact_yenimeslekid].[new_yenimeslekId])
+    left join [PriceLevelBase] [price_level_contacts] on ([ContactBase].[DefaultPriceLevelId] = [price_level_contacts].[PriceLevelId])
+    left join [ServiceBase] [service_contacts] on ([ContactBase].[PreferredServiceId] = [service_contacts].[ServiceId])
+    left join [SystemUserBase] [system_user_contacts] with(nolock) on ([ContactBase].[PreferredSystemUserId] = [system_user_contacts].[SystemUserId])
+    left join [TransactionCurrencyBase] [transactioncurrency_contact] on ([ContactBase].[TransactionCurrencyId] = [transactioncurrency_contact].[TransactionCurrencyId])
+    left join OwnerBase XXowner with(nolock) on ([ContactBase].OwnerId = XXowner.OwnerId)
+
+-------------------------------------------------------------------------------------------------------------
+
+--haberalma kaynakları ve sebepleri
+
+/****** Script for SelectTopNRows command from SSMS  ******/
+  SELECT distinct new_name
+  FROM [egeyapi_MSCRM].[dbo].[new_haberdarkaynak]
+
+  select  distinct  new_name FROM [egeyapi_MSCRM].[dbo].[new_haberdarkaynak]
+  where 1=1
+  --and statecode = 1
+  --and statuscode = 2
+  --and new_name like '%CNN%'
+
+  SELECT 
+  distinct new_name
+  FROM [egeyapi_MSCRM].[dbo].[new_haberdaraltsebep] 
+  --ALT_HABER_OLMA_SEBEBİ
+  --ikinci_ALT_HABER_OLMA_SEBEBİ
+
+  
+
+  select 
+  distinct new_name
+  FROM [egeyapi_MSCRM].[dbo].[new_haberdarolmasebebi] 
+  --ILK_HABERDAR_OLMA_KAYNAGI,IKINCI_HABERDAR_OLMA_KAYNAGI
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--ADRES
+
+  select distinct new_name from dbo.new_ulke
+
+  select distinct new_ilad from dbo.new_il
+
+  select distinct new_ilcead from [dbo].[new_ilce]
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+--sektor
+
+  select value from stringmap where  attributename = 'new_sektor'
+
+--(... tıkla- form-rapor tasarımına bakılır. asagıda sektor e tıkla. sektor bılgılerıne ulasabılırsın)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  select 
+  top 10 * 
+  --distinct Name 
+  from account
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--ahmet bey data aktarma
+
+SELECT
+--UPPER(FullName) FullName,
+MobilePhone,
+--EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+
+FROM Contact c
+
+where 1=1
+and mobilephone is not null
+
+----------------------------------------------------------------------
+
+SELECT
+--UPPER(FullName) FullName,
+MobilePhone,
+--EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+into #temp
+FROM Contact c
+
+where 1=1
+and mobilephone is not null
+
+select distinct MobilePhone from #temp
+where 1=1
+and SMS = 'Belirsiz' or SMS = 'Evet'
+and MobilePhone is not null
+
+--544575---------------------------------------------------------------------------------------------------------------------------------------
+--sms data cekme
+
+SELECT
+--UPPER(FullName) FullName,
+case when len(MobilePhone) = 10 then '0'+MobilePhone else MobilePhone end,
+--EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+--into #temp
+FROM Contact c
+
+where 1=1
+and mobilephone is not null
+--and SMS = 'Belirsiz' or SMS = 'Evet'
+--and MobilePhone is not null
+and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+and (len(MobilePhone)=10 or len(MobilePhone)=11)
+
+
+select distinct 
+MobilePhone from #temp
+where 1=1
+and SMS = 'Belirsiz' or SMS = 'Evet'
+and MobilePhone is not null
+and left(MobilePhone,1)='5'
+and len(MobilePhone)=10
+
+-----------------------------------------------------
+
+SELECT
+--UPPER(FullName) FullName,
+case when len(MobilePhone) = 10 then '0'+MobilePhone else MobilePhone end,
+--EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+--into #temp
+FROM Contact c
+
+where 1=1
+and mobilephone is not null
+--and SMS = 'Belirsiz' or SMS = 'Evet'
+--and MobilePhone is not null
+and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+and (len(MobilePhone)=10 or len(MobilePhone)=11)	
+
+and (MobilePhone= '05325487061' or MobilePhone= '05323926327' 
+or MobilePhone='05054101882' or MobilePhone='05323943483')
+
+
+select distinct 
+MobilePhone from #temp
+where 1=1
+and SMS = 'Belirsiz' or SMS = 'Evet'
+and MobilePhone is not null
+and left(MobilePhone,1)='5'
+and len(MobilePhone)=10
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+drop table #temp
+
+SELECT
+--UPPER(FullName) FullName,
+MobilePhone,
+--EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+into #temp
+FROM Contact c
+
+where 1=1
+and mobilephone is not null
+and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+and (len(MobilePhone)=10 or len(MobilePhone)=11)
+
+select distinct 
+MobilePhone,sms  from #temp
+where 1=1
+and (SMS = 'Belirsiz' or SMS = 'Evet')
+and MobilePhone is not null
+
+------------------------------------------------------------------------
+
+update
+
+
+update Contact set mobilephone = '05322340691' 
+where 1=1
+--and mobilephone = '005322340691 '
+and StateCode = 0
+and left(MobilePhone,3) = '005'
+
+update Contact set new_yurtdisitel = '16316412934' 
+where 1=1
+--and mobilephone = '005052082757'
+
+SELECT c.*
+FROM Contact c
+where 1=1
+and mobilephone = '005322340691 '
+--and new_yurtdisitel = '16316412934'
+and StateCode = 0
+
+SELECT c.mobilephone, SUBSTRING(c.mobilephone,1,1)
+FROM Contact c
+where 1=1
+and StateCode = 0
+and left(MobilePhone,3) = '005'
+
+
+update Contact set mobilephone = replace(mobilephone,mobilephone,'0'+mobilephone)
+where 1=1
+and StateCode = 0
+and left(MobilePhone,1) = '5'
+and mobilephone = '505610709'
+
+
+--update Contact set mobilephone = replace(mobilephone,left(mobilephone,2),'')
+--where 1=1
+--and StateCode = 0
+--and left(c.MobilePhone,4) = '0905'
+----and MobilePhone = '005322535498'
+
+
+select distinct c.FullName, c.MobilePhone, replace(mobilephone,left(mobilephone,2),'')
+FROM Contact c
+where 1=1
+and StateCode = 0
+and left(c.MobilePhone,4) = '0905'
+--and c.MobilePhone = '05322535498'
+--and (len(MobilePhone)=10 or len(MobilePhone)=11)
+
+SELECT c.mobilephone,
+replace(c.mobilephone,c.mobilephone,'0'+c.mobilephone)
+FROM Contact c
+where 1=1
+and StateCode = 0
+and left(MobilePhone,1) = '5'
+and mobilephone = '505610709'
+
+update Contact set mobilephone = replace(mobilephone,mobilephone,'0'+mobilephone)
+where 1=1
+and StateCode = 0
+and left(MobilePhone,1) = '5'
+and mobilephone = '505610709'
+
+update Contact set mobilephone = replace(mobilephone,left(mobilephone,2),'')
+where 1=1
+and StateCode = 0
+and left(MobilePhone,4) = '0905'
+and (MobilePhone = '0905492315841' 
+	or MobilePhone = '0905332421772'
+	or MobilePhone = '0905346515031'
+	or MobilePhone = '0905322513562'
+	or MobilePhone = '0905377847646'
+	or MobilePhone = '0905427703002')
+
+
+--------------------------------------------------------------karaketer bulma
+
+SELECT MobilePhone
+FROM Contact
+WHERE MobilePhone LIKE '%*(%' ESCAPE '*'
+and StateCode = 0
+
+SELECT fullname, MobilePhone, EMailAddress1
+FROM Contact
+WHERE MobilePhone LIKE '%/,%' ESCAPE '/'
+and StateCode = 0
+
+SELECT fullname, MobilePhone, EMailAddress1
+FROM Contact
+WHERE MobilePhone LIKE '%''%'
+
+----------------------------------------------------------haberdar olma sebebi
+
+select top 1000 hb.new_name, c.YomiFullName,c.MobilePhone from contact c
+inner join new_haberdarolmasebebi hb on hb.new_haberdarolmasebebiId = c.new_haberdarolmasebebiid
+where 1=1
+and new_haberdarolmasebebiid = '153F0812-5D0E-E811-841E-1866DA7886BB'
+
+select  * from new_haberdarolmasebebi
+where 1=1
+ORDER BY new_name
+
+select top 10 new_name from new_haberdaraltsebep
+where 1=1
+
+select top 10 hb.new_name, c.YomiFullName,c.MobilePhone, c.new_haberdarolmasebebiidName from contact c
+inner join new_haberdarolmasebebi hb on hb.new_haberdarolmasebebiId = c.new_haberdarolmasebebiid
+where 1=1
+
+select distinct hb.new_name, c.new_haberdarolmasebebiidName from contact c
+inner join new_haberdarolmasebebi hb on hb.new_haberdarolmasebebiId = c.new_haberdarolmasebebiid
+where 1=1
+
+update Contact
+set new_haberdarolmasebebiid='{65A5B3F6-B269-E611-80C3-44A8424333CE}'
+where new_haberdarolmasebebiidName in 
+('CNN'
+)
+
+
+SELECT count (new_haberdarolmasebebiidName) FROM Contact
+WHERE 1=1
+AND new_haberdarolmasebebiidName in 
+('CNN',
+'TV'
+)
+
+
+SELECT count (new_haberdarolmasebebiidName) FROM Contact
+WHERE 1=1
+AND new_haberdarolmasebebiidName in 
+('Ege Yapı Ev Sahibi')
+
+('DEVİR',
+'İSİM DEĞİŞİKLİĞİ',
+'Data',
+'deniz test',
+'DİĞER',
+'Ege Yapı Data',
+'Haberdar Olma Kaynağı Yoktur'
+)
+
+----------------------------------------------------------------uyruk
+
+select distinct new_Uyruk from contact
+
+select value from stringmap where  attributename = 'new_Uyruk'
+
+----------------------------------------------------vergı daıresı
+
+select distinct new_vergidaire from contact
+WHERE 1=1
+--and new_vergidaire like '%034249-İKİTELLİ%'
+
+select * from [EGEDB01\EGEYAPI].TIGERDB.dbo.L_TAXOFFICE
+where 1=1
+--and ADDR1 = 'ISTANBUL'
+and Name like ('%ikitelli%')
+--.NAME
+--3951892723
+select distinct mobilephone,YomiFullName, new_vergidaire from contact
+WHERE 1=1
+--AND new_vergidaire like '%034249-İKİTELLİ%'
+and new_vergidaire is not null
+--and mobilephone is not null
+and new_yurtdisitel = '00919591028965'
+
+select distinct mobilephone,YomiFullName, new_vergidaire from contact
+WHERE 1=1
+--AND new_vergidaire like '%034249-İKİTELLİ%'
+and new_vergidaire is not null
+
+İLk gercek kısı tc vatandası ıse nufus cuzdanı fotokopisi veya vergi levhası
+yabancı ise noterin yazmış olduğu satış sözleşmesindeki bilgiler.
+
+----------------------------------------------------------------------------fb datası
+
+drop table #temp
+
+SELECT
+UPPER(FirstName) FirstName,
+UPPER(LastName) LastName,
+MobilePhone,
+EMailAddress1,
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+--,new_projeid
+w.new_projeidName
+into #temp
+FROM Contact c
+inner join dbo.new_webform w on c.ContactId=w.new_contactid
+where 1=1
+and c.mobilephone is not null
+--and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+--and (len(MobilePhone)=10 or len(MobilePhone)=11)
+--and c.new_projeid is not null
+--and new_projeidName = 'THE SUPERIOR SUITES'
+
+
+insert into #temp
+SELECT
+UPPER(FirstName) FirstName,
+UPPER(LastName) LastName,
+MobilePhone,
+EMailAddress1,
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+--,new_projeid
+c.new_projeidName
+
+FROM Contact c
+--inner join dbo.new_webform w on c.ContactId=w.new_contactid
+where 1=1
+and c.mobilephone is not null
+--and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+--and (len(MobilePhone)=10 or len(MobilePhone)=11)
+and c.new_projeid is not null
+--and new_projeidName = 'THE SUPERIOR SUITES'
+
+select distinct 
+FirstName,LastName,MobilePhone,EMailAddress1,new_projeidName  from #temp t
+--inner join new_proje np on t.new_projeid = np.new_projeId
+where 1=1
+--and (SMS = 'Belirsiz' or SMS = 'Evet')
+--and MobilePhone is not null
+
+--73143
+
+select distinct 
+MobilePhone,sms  from #temp
+where 1=1
+and (SMS = 'Belirsiz' or SMS = 'Evet')
+and MobilePhone is not null
+
+select top 10 * from Contact
+
+select top 10 * from new_webform
+where 1=1
+--and new_ilgilendigiproje = 'The Superior Suites'
+
+-------------------------------------------------------------------------------------------- gorusme turu
+
+select mobilephone,YomiFullName, new_gorusmeturu from contact
+WHERE 1=1
+and new_gorusmeturu = 10
+
+select * from stringmap where  attributename = 'new_gorusmeturu'
+
+
+--------------------------------- satıs fırsat
+
+select * from new_satisfirsat
+where 1=1
+and new_gorusmeturu = 4
+
+
+------------------------butunlesikrapor3 Whatsapp 
+
+DECLARE @BasTarih datetime = '2021-04-28 00:00:00'
+DECLARE @BitTarih datetime = '2021-04-28 00:00:00'
+
+SELECT 
+UPPER(ISNULL(wf.new_utmsource, ISNULL(randevu.new_utmsource, ISNULL(rt.new_utmsource, satis.new_utmsource)))) AS id,
+wf.[CER İSTANBUL] cerwf,wf.[KORDON İSTANBUL] kordonwf,wf.[ÇAMLIYAKA KONAKLARI] ckwf,WF.[BATIŞEHİR] btwf, wf.[THE SUPERIOR SUITES] tsswf,
+randevu.[CER İSTANBUL0] cery,randevu.[CER İSTANBUL1] cerd, randevu.[KORDON İSTANBUL0] kordony, randevu.[KORDON İSTANBUL1] kordond, randevu.[ÇAMLIYAKA KONAKLARI0] cky, randevu.[ÇAMLIYAKA KONAKLARI1]ckd, randevu.[BATIŞEHİR0] bty, randevu.[BATIŞEHİR1] btd, randevu.[THE SUPERIOR SUITES0] tssy, randevu.[THE SUPERIOR SUITES1] tssd,
+rt.[CER İSTANBUL0] cerya,rt.[CER İSTANBUL1] cerda, rt.[KORDON İSTANBUL0] kordonya, rt.[KORDON İSTANBUL1] kordonda, rt.[ÇAMLIYAKA KONAKLARI0] ckya, rt.[ÇAMLIYAKA KONAKLARI1] ckda, rt.[BATIŞEHİR0] btya, rt.[BATIŞEHİR1] btda, RT.[THE SUPERIOR SUITES0] tssya, RT.[THE SUPERIOR SUITES1] tssda,
+satis.[CER İSTANBUL] ceradet,satis.[KORDON İSTANBUL] kordonadet,satis.[ÇAMLIYAKA KONAKLARI] ckadet, satis.[BATIŞEHİR] btadet, satis.[THE SUPERIOR SUITES] tssadet,
+sciro.[CER İSTANBUL] cerciro,sciro.[KORDON İSTANBUL]kordonciro,sciro.[ÇAMLIYAKA KONAKLARI] ckciro,sciro.[BATIŞEHİR] btciro, sciro.[THE SUPERIOR SUITES] tssciro
+FROM
+(select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, p.new_projeName as new_projeidName  from PhoneCall p
+inner join contact c on c.contactId=p.RegardingObjectId
+where dateadd(hour,3,p.createdon)>=@BasTarih and dateadd(hour,3,p.createdon)<dateadd(day,1,@BitTarih) and p.new_projeName is not null and p.new_aramakaynagi=5 and p.new_AramaKaynagi<>2 and c.new_haberdarolmasebebiidName<>'Barter'
+and NOT EXISTS(SELECT NULL FROM new_webform a WHERE a.new_contactid = p.regardingobjectId)
+)t
+PIVOT (
+    count(new_projeidName)
+    FOR new_projeidName IN ([CER İSTANBUL],[ÇAMLIYAKA KONAKLARI],[KORDON İSTANBUL],[BATIŞEHİR],[THE SUPERIOR SUITES]) 
+) as wf
+full outer join
+(
+select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, a.new_projeName+cast(new_tur as nvarchar(1)) col from Appointment a
+inner join Contact c on c.contactId=a.regardingobjectId
+inner join (SELECT RANK() OVER (PARTITION BY regardingobjectId ORDER BY createdon DESC) r, *
+             FROM phonecall where new_aramakaynagi=5 and new_AramaKaynagi<>2) p
+
+ON (p.regardingobjectId=a.regardingobjectId)
+  cross apply
+  (
+    VALUES
+        (a.new_proje, cast(new_tur as nvarchar(1)))
+   ) x (value, col)
+   where dateadd(hour,3,a.createdon)>=@BasTarih and dateadd(hour,3,a.createdon)<dateadd(day,1,@BitTarih)
+   and a.new_projeName is not null and  a.new_webformid is null and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = a.regardingobjectId) and c.new_haberdarolmasebebiidName<>'Barter' and a.new_RandevuKonusu='100000000'
+and p.r=1 and a.RegardingObjectId not in (select RegardingObjectId from PhoneCall where new_AramaKaynagi=2)
+)t
+PIVOT (
+    count(col)
+    FOR col IN ([CER İSTANBUL0],[CER İSTANBUL1],[KORDON İSTANBUL0],[KORDON İSTANBUL1],[ÇAMLIYAKA KONAKLARI0],[ÇAMLIYAKA KONAKLARI1],[BATIŞEHİR0],[BATIŞEHİR1],[THE SUPERIOR SUITES0],[THE SUPERIOR SUITES1])
+) as randevu  on randevu.new_utmsource=wf.new_utmsource --0 yüzyüze
+full outer join
+(
+select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, a.new_projeName+cast(new_tur as nvarchar(1)) col from Appointment a
+inner join Contact c on c.contactId=a.regardingobjectId
+inner join (SELECT RANK() OVER (PARTITION BY regardingobjectId ORDER BY createdon DESC) r, *
+             FROM phonecall where new_aramakaynagi=5 and new_AramaKaynagi<>2) p
+
+ON (p.regardingobjectId=a.regardingobjectId)
+  cross apply
+  (
+    VALUES
+        (a.new_proje, cast(new_tur as nvarchar(1)))
+   ) x (value, col)
+   where dateadd(hour,3,a.createdon)>=@BasTarih and dateadd(hour,3,a.createdon)<dateadd(day,1,@BitTarih)
+   and a.new_projeName is not null and  a.new_webformid is null and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = a.regardingobjectId) and c.new_haberdarolmasebebiidName<>'Barter' and a.new_RandevuKonusu='100000000'
+and p.r=1 
+and a.statecode=1
+and a.RegardingObjectId not in (select RegardingObjectId from PhoneCall where new_AramaKaynagi=2)
+)t
+PIVOT (
+    count(col)
+    FOR col IN ([CER İSTANBUL0],[CER İSTANBUL1],[KORDON İSTANBUL0],[KORDON İSTANBUL1],[ÇAMLIYAKA KONAKLARI0],[ÇAMLIYAKA KONAKLARI1],[BATIŞEHİR0],[BATIŞEHİR1],[THE SUPERIOR SUITES0],[THE SUPERIOR SUITES1])
+) as rt  on rt.new_utmsource=randevu.new_utmsource
+full outer join 
+(
+select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, s.new_projeidName  from new_satis s
+inner join Contact c on c.ContactId=s.new_contactid
+inner join
+     (SELECT RANK() OVER (PARTITION BY RegardingObjectId ORDER BY createdon DESC) r, *
+             FROM PhoneCall where new_aramakaynagi=5 and new_AramaKaynagi<>2) p
+ON (s.new_contactid = p.RegardingObjectId)
+where dateadd(hour,3,s.createdon)>=@BasTarih and dateadd(hour,3,s.createdon)<dateadd(day,1,@BitTarih) and s.statecode=0 and p.r=1  and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = s.new_contactid) 
+ and s.new_networkid='{5CF49368-95DE-E911-8110-E4115B13BF35}'
+and c.new_haberdarolmasebebiidName<>'Barter'
+and s.new_satisturu<>'100000002'
+)t
+PIVOT (
+    count(new_projeidName)
+    FOR new_projeidName IN ([CER İSTANBUL],[ÇAMLIYAKA KONAKLARI],[KORDON İSTANBUL],[BATIŞEHİR],[THE SUPERIOR SUITES]) 
+) as satis on satis.new_utmsource=wf.new_utmsource
+full outer join 
+
+(
+select 
+ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, new_toplamtutar,s.new_projeidName from new_satis s
+inner join Contact c on c.ContactId=s.new_contactid
+inner join
+     (SELECT RANK() OVER (PARTITION BY RegardingObjectId ORDER BY createdon DESC) r, *
+             FROM phonecall where new_aramakaynagi=5 and new_AramaKaynagi<>2) p
+ON (s.new_contactid = p.RegardingObjectId)
+
+where dateadd(hour,3,s.createdon)>=@BasTarih and dateadd(hour,3,s.createdon)<dateadd(day,1,@BitTarih) and s.statecode=0 and p.r=1 and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = s.new_contactid) 
+ and s.new_networkid='{5CF49368-95DE-E911-8110-E4115B13BF35}'
+and c.new_haberdarolmasebebiidName<>'Barter'
+and s.new_satisturu<>'100000002'
+)t
+PIVOT (
+    sum(new_toplamtutar)
+    FOR new_projeidName IN ([CER İSTANBUL],[ÇAMLIYAKA KONAKLARI],[KORDON İSTANBUL],[BATIŞEHİR],[THE SUPERIOR SUITES])
+) as sciro on sciro.new_utmsource=satis.new_utmsource
+
+-------------butunlesikrapor3 gelen cagrı
+
+
+DECLARE @BasTarih datetime = '2021-04-28 00:00:00'
+DECLARE @BitTarih datetime = '2021-04-28 00:00:00'
+
+SELECT 
+UPPER(ISNULL(wf.new_utmsource, ISNULL(randevu.new_utmsource, ISNULL(rt.new_utmsource, satis.new_utmsource)))) AS id,
+wf.[CER İSTANBUL] cerwf,wf.[KORDON İSTANBUL] kordonwf,wf.[ÇAMLIYAKA KONAKLARI] ckwf,WF.[BATIŞEHİR] btwf, wf.[THE SUPERIOR SUITES] tsswf,
+randevu.[CER İSTANBUL0] cery,randevu.[CER İSTANBUL1] cerd, randevu.[KORDON İSTANBUL0] kordony, randevu.[KORDON İSTANBUL1] kordond, randevu.[ÇAMLIYAKA KONAKLARI0] cky, randevu.[ÇAMLIYAKA KONAKLARI1]ckd, randevu.[BATIŞEHİR0] bty, randevu.[BATIŞEHİR1] btd, randevu.[THE SUPERIOR SUITES0] tssy, randevu.[THE SUPERIOR SUITES1] tssd,
+rt.[CER İSTANBUL0] cerya,rt.[CER İSTANBUL1] cerda, rt.[KORDON İSTANBUL0] kordonya, rt.[KORDON İSTANBUL1] kordonda, rt.[ÇAMLIYAKA KONAKLARI0] ckya, rt.[ÇAMLIYAKA KONAKLARI1] ckda, rt.[BATIŞEHİR0] btya, rt.[BATIŞEHİR1] btda, RT.[THE SUPERIOR SUITES0] tssya, RT.[THE SUPERIOR SUITES1] tssda,
+satis.[CER İSTANBUL] ceradet,satis.[KORDON İSTANBUL] kordonadet,satis.[ÇAMLIYAKA KONAKLARI] ckadet, satis.[BATIŞEHİR] btadet, satis.[THE SUPERIOR SUITES] tssadet,
+sciro.[CER İSTANBUL] cerciro,sciro.[KORDON İSTANBUL]kordonciro,sciro.[ÇAMLIYAKA KONAKLARI] ckciro,sciro.[BATIŞEHİR] btciro, sciro.[THE SUPERIOR SUITES] tssciro
+FROM
+(select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, p.new_projeName as new_projeidName  from PhoneCall p
+inner join contact c on c.contactId=p.RegardingObjectId
+where dateadd(hour,3,p.createdon)>=@BasTarih and dateadd(hour,3,p.createdon)<dateadd(day,1,@BitTarih) and p.new_projeName is not null and p.new_aramakaynagi=2 and p.new_AramaKaynagi<>5 and c.new_haberdarolmasebebiidName<>'Barter'
+--and NOT EXISTS(SELECT NULL FROM new_webform a WHERE a.new_contactid = p.regardingobjectId)
+)t
+PIVOT (
+    count(new_projeidName)
+    FOR new_projeidName IN ([CER İSTANBUL],[ÇAMLIYAKA KONAKLARI],[KORDON İSTANBUL],[BATIŞEHİR],[THE SUPERIOR SUITES]) 
+) as wf
+full outer join
+(
+select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, a.new_projeName+cast(new_tur as nvarchar(1)) col from Appointment a
+inner join Contact c on c.contactId=a.regardingobjectId
+inner join (SELECT RANK() OVER (PARTITION BY regardingobjectId ORDER BY createdon DESC) r, *
+             FROM phonecall where new_aramakaynagi=2 and new_AramaKaynagi<>5) p
+
+ON (p.regardingobjectId=a.regardingobjectId)
+  cross apply
+  (
+    VALUES
+        (a.new_proje, cast(new_tur as nvarchar(1)))
+   ) x (value, col)
+   where dateadd(hour,3,a.createdon)>=@BasTarih and dateadd(hour,3,a.createdon)<dateadd(day,1,@BitTarih)
+   and a.new_projeName is not null and  a.new_webformid is null  and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = a.regardingobjectId) and c.new_haberdarolmasebebiidName<>'Barter' and a.new_RandevuKonusu='100000000'
+and p.r=1
+)t
+PIVOT (
+    count(col)
+    FOR col IN ([CER İSTANBUL0],[CER İSTANBUL1],[KORDON İSTANBUL0],[KORDON İSTANBUL1],[ÇAMLIYAKA KONAKLARI0],[ÇAMLIYAKA KONAKLARI1],[BATIŞEHİR0],[BATIŞEHİR1],[THE SUPERIOR SUITES0],[THE SUPERIOR SUITES1])
+) as randevu  on randevu.new_utmsource=wf.new_utmsource --0 yüzyüze
+full outer join
+(
+select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, a.new_projeName+cast(new_tur as nvarchar(1)) col from Appointment a
+inner join Contact c on c.contactId=a.regardingobjectId
+inner join (SELECT RANK() OVER (PARTITION BY regardingobjectId ORDER BY createdon DESC) r, *
+             FROM phonecall  where new_aramakaynagi=2 and new_AramaKaynagi<>5) p
+
+ON (p.regardingobjectId=a.regardingobjectId)
+  cross apply
+  (
+    VALUES
+        (a.new_proje, cast(new_tur as nvarchar(1)))
+   ) x (value, col)
+   where dateadd(hour,3,a.createdon)>=@BasTarih and dateadd(hour,3,a.createdon)<dateadd(day,1,@BitTarih)
+   and a.new_projeName is not null and  a.new_webformid is null and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = a.regardingobjectId) and c.new_haberdarolmasebebiidName<>'Barter' and a.new_RandevuKonusu='100000000'
+and p.r=1 
+and a.statecode=1
+)t
+PIVOT (
+    count(col)
+    FOR col IN ([CER İSTANBUL0],[CER İSTANBUL1],[KORDON İSTANBUL0],[KORDON İSTANBUL1],[ÇAMLIYAKA KONAKLARI0],[ÇAMLIYAKA KONAKLARI1],[BATIŞEHİR0],[BATIŞEHİR1],[THE SUPERIOR SUITES0],[THE SUPERIOR SUITES1])
+) as rt on rt.new_utmsource=randevu.new_utmsource
+full outer join 
+(
+select ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, s.new_projeidName  from new_satis s
+inner join Contact c on c.ContactId=s.new_contactid
+inner join
+     (SELECT RANK() OVER (PARTITION BY RegardingObjectId ORDER BY createdon DESC) r, *
+             FROM PhoneCall  where new_aramakaynagi=2 and new_AramaKaynagi<>5) p
+ON (s.new_contactid = p.RegardingObjectId)
+where dateadd(hour,3,s.createdon)>=@BasTarih and dateadd(hour,3,s.createdon)<dateadd(day,1,@BitTarih) and s.statecode=0 and p.r=1 and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = s.new_contactid)  and s.new_ananetwork=1 and c.new_haberdarolmasebebiidName<>'Barter'
+and s.new_satisturu<>'100000002'
+ and s.new_networkid='{5CF49368-95DE-E911-8110-E4115B13BF35}'
+and c.new_gorusmeturu<>7
+)t
+PIVOT (
+    count(new_projeidName)
+    FOR new_projeidName IN ([CER İSTANBUL],[ÇAMLIYAKA KONAKLARI],[KORDON İSTANBUL],[BATIŞEHİR],[THE SUPERIOR SUITES]) 
+) as satis on satis.new_utmsource=wf.new_utmsource
+full outer join 
+
+(
+select 
+ISNULL(c.new_haberdarolmasebebiidName,'İnternet Siteleri/Reklamları') new_utmsource, new_toplamtutar,s.new_projeidName from new_satis s
+inner join Contact c on c.ContactId=s.new_contactid
+inner join
+     (SELECT RANK() OVER (PARTITION BY RegardingObjectId ORDER BY createdon DESC) r, *
+             FROM phonecall  where new_aramakaynagi=2 and new_AramaKaynagi<>5) p
+ON (s.new_contactid = p.RegardingObjectId)
+
+where dateadd(hour,3,s.createdon)>=@BasTarih and dateadd(hour,3,s.createdon)<dateadd(day,1,@BitTarih) and s.statecode=0 and p.r=1 and NOT EXISTS(SELECT NULL FROM new_webform w WHERE w.new_contactid = s.new_contactid)  
+ and s.new_networkid='{5CF49368-95DE-E911-8110-E4115B13BF35}'
+and c.new_haberdarolmasebebiidName<>'Barter'
+and s.new_satisturu<>'100000002'
+and c.new_gorusmeturu<>7
+)t
+PIVOT (
+    sum(new_toplamtutar)
+    FOR new_projeidName IN ([CER İSTANBUL],[ÇAMLIYAKA KONAKLARI],[KORDON İSTANBUL],[BATIŞEHİR],[THE SUPERIOR SUITES])
+) as sciro on sciro.new_utmsource=satis.new_utmsource
+
+-------------------------------------------------------------data kaynak
+select distinct new_tdata from contact
+where 1=1
+and new_tdata is not null
+
+--t_data kaynak yer
+
+--------------------------------------------------------------- mailing
+
+drop table #temp
+
+SELECT
+UPPER(FullName) FullName,
+MobilePhone,
+EMailAddress1,
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+into #temp
+FROM Contact c
+
+where 1=1
+--and mobilephone is not null
+--and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+--and (len(MobilePhone)=10 or len(MobilePhone)=11)
+
+select distinct 
+FullName,MobilePhone,EMailAddress1,[E-Posta]  from #temp
+where 1=1
+--and (SMS = 'Belirsiz' or SMS = 'Evet')
+--and MobilePhone is not null
+and EMailAddress1 like '%attc%'
+
+
+---------------------------------------------------------------------------- satın alann musterı adreslerı
+
+select distinct c.YomiFullName,c.MobilePhone,c.EMailAddress1,d.new_kod
+,i.new_ilad,ic.new_ilcead,c.address1_line1, p.new_name,
+c.address1_line2,i2.new_ilad,ic2.new_ilcead,address2_line1,address2_line2
+from new_satis s 
+LEFT JOIN contact c on C.contactId = s.new_contactid
+
+LEFT JOIN new_daire d on d.new_name = s.new_daireidName
+LEFT JOIN new_proje p on p.new_projeId = s.new_projeid
+LEFT JOIN new_il i on c.new_il = i.new_ilId
+LEFT JOIN new_ilce ic on ic.new_ilceId = c.new_ilce
+LEFT JOIN new_il i2 on c.new_il2 = i2.new_ilId
+LEFT JOIN new_ilce ic2 on ic2.new_ilceId = c.new_ilce2
+where 1=1
+--nd c.YomiFullName = 'SÜLEYMAN TEKİN'
+--AND c.MobilePhone = '05323038063'
+--and c.MobilePhone = '05322328192'
+and p.new_name = 'ÇAMLIYAKA KONAKLARI'
+
+------------------------------------
+
+update
+
+
+select statecode from phonecall where ActivityId='{05DC829A-76C4-EB11-84AC-000C292E580F}'
+
+update phonecall
+set new_ziyarettarihi=new_ziyarettarihi+1
+where ActivityId='{05DC829A-76C4-EB11-84AC-000C292E580F}'
+
+mail son----------------------------------------------------------------
+
+
+drop table #temp
+
+SELECT
+UPPER(FullName) FullName,
+MobilePhone,
+EMailAddress1,
+new_milliyet,
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+into #temp
+FROM Contact c
+
+where 1=1
+and StateCode = 0 --aktif müşteriler
+--and mobilephone is not null
+--and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+--and (len(MobilePhone)=10 or len(MobilePhone)=11)
+
+select distinct 
+EMailAddress1  from #temp
+where 1=1
+and ([E-Posta] = 'Belirsiz' or [E-Posta] = 'Evet')
+--and MobilePhone is not null
+and EMailAddress1 like '%@%'
+and new_milliyet = 1
+and EMailAddress1 not in 
+(select recipient from IYS
+WHERE 1=1
+AND STATUS = 'ret'
+and type = 'EPOSTA')
+
+----------------------------------------sms son-----------------------------------------------------------
+
+drop table #temp
+
+SELECT
+UPPER(FullName) FullName,
+MobilePhone,
+--EMailAddress1,
+ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=1 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [SMS]
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=2 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [E-Posta],
+--ISNULL((SELECT TOP 1 CASE new_izindurum WHEN 1 THEN 'Evet' WHEN 2 THEN 'Hayır' ELSE 'Belirsiz' END FROM new_ipo i WHERE new_izinkanali=3 AND c.ContactId=i.new_contactid ORDER BY CreatedOn DESC),'Belirsiz') [Arama]
+into #temp
+FROM Contact c
+
+where 1=1
+and mobilephone is not null
+and StateCode = 0 --aktif müşteriler
+and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+and (len(MobilePhone)=10 or len(MobilePhone)=11)
+
+select distinct 
+MobilePhone,sms  from #temp
+where 1=1
+--and (SMS = 'Belirsiz' or SMS = 'Evet')
+--and MobilePhone is not null
+and MobilePhone = '05447814266'
+and EMailAddress1 not in 
+(select recipient from IYS
+WHERE 1=1
+AND STATUS = 'ret'
+and type = 'EPOSTA')
+
+select top 10 c.* from contact c
+where 1=1
+and MobilePhone = '905324194548' 
+
+
+select ContactId, iz,mobilephone from (
+select  c.ContactId 
+, dbo.izingetir(c.ContactId )  iz
+, mobilephone
+from contact c
+where   statecode  = 0
+and mobilephone is not null
+and (left(MobilePhone,1)='5' or left(MobilePhone,2)='05')
+and (len(MobilePhone)=10 or len(MobilePhone)=11)
+ 
+)s
+where iz = 1
+
+SMS_SON-----------------------------------------------------------
+
+select distinct MobilePhone from contact where new_IYSSMS=1
+
+select EMailAddress1 from contact where new_IYSEPosta=1
+
+statecode=0 
+
+--------------------------------------------------------------------------------------------------------------------------
+
+randevular webform haberdar olma
+
+select 
+c.FullName,a.RegardingObjectIdName,c.mobilephone,
+--m.new_haberdarolmasebebiidName,m.new_haberdaraltsebepidName,m.CreatedOn,
+(select top 1 new_haberdarolmasebebiidName from new_musterihaberdarolma m 
+where m.new_contactid=c.ContactId order by createdon desc) haberdarolmakaynak,
+(select top 1 case new_haberdarolmasebebiidName when 'Referans' then 
+(case new_referansidName when  null then new_refcontactidName else new_referansidName end) 
+when 'Acenta Yönlendirme' then new_networkidname when 'Satış Ofisi Branding' 
+then new_haberdaraltsebepidName+' '+new_detay when 'Web Form' then new_utmsource else new_haberdaraltsebepidName end 
+from new_musterihaberdarolma m where m.new_contactid=c.ContactId order by createdon desc) haberdarolmasebep,
+a.Subject,a.new_ProjeName,
+case when a.StateCode=	0 then 'Açık'
+when a.statecode=1 then 'Tamamlandı'
+when a.StateCode = 2 then 'İptal' end as Durum
+,(select top 1 w.new_utmsource from new_webform w where c.ContactId = w.new_contactid order by CreatedOn desc) utmsource,
+(select top 1 w.new_utmcampaign from new_webform w where c.ContactId = w.new_contactid order by CreatedOn desc) utmcampaign,
+(select top 1 w.new_utmcontent from new_webform w where c.ContactId = w.new_contactid order by CreatedOn desc) utmcontent,
+(select top 1 w.new_utmterm from new_webform w where c.ContactId = w.new_contactid order by CreatedOn desc) utmterm,
+--,w.new_utmcampaign,w.new_utmcontent,w.new_utmterm
+a.ScheduledStart
+from contact c
+right JOIN Appointment a on a.RegardingObjectId = c.ContactId
+--left join new_webform w on c.ContactId = w.new_contactid
+--left join new_musterihaberdarolma m on m.new_contactid=s.new_contactid
+where 1=1
+and a.ScheduledStart >= '01.01.2021' 
+--and  dateadd(hour,0,a.CreatedOn)>= '01.01.2021' 
+--and a.statecode = 0
+order by ScheduledStart
+
+----------------------------------------------------------------------------
+
+update new_daire
+set new_yon = ( select [Yön] from [dbo].['Son Çarşaf Liste$']
+where new_daire.new_blok = [dbo].['Son Çarşaf Liste$'].Blok 
+and new_daire.new_daireno = [dbo].['Son Çarşaf Liste$'].Numara
+)
+where 1=1
+and new_projeidName like '%BATIŞEHİR RADISSON BLU%'
+
+------------------------------------------------------------------------------
+
+musteri datasi
+
+select distinct YomiFirstName,YomiLastName, EMailAddress1,c.MobilePhone, p.new_ProjeName from contact c
+LEFT join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+and c.CreatedOn >= '2021-04-27 21:00:00.000'
+and	p.new_ProjeName like '%batı%'
+
+
+----------------------UPDATE----------------------
+
+update new_gorusme
+set Description = 'GÜZELYALI A BLOK 20 NO LU DAİRE SATILMIŞTIR.'
+where 1=1
+and RegardingObjectIdName like '%KORDON MARS%'
+AND new_AcentaId = 'C25C37A1-DE53-EB11-8346-000C292E580F'
+
+-------------------------------------------SATIS OLAN MUSTERI IZIN DATASI
+
+select distinct c.firstname İsim,c.lastname Soyisim,c.MobilePhone,
+case when c.new_IYSSMS=1 then 'izinli'
+	when c.new_IYSSMS=0 then 'izinsiz'
+	when c.new_IYSSMS is null then 'belirsiz'
+	end Sms_Durum,
+case when c.new_IYSArama=1 then 'izinli'
+	when c.new_IYSArama=0 then 'izinsiz'
+	when c.new_IYSArama is null then 'belirsiz'
+	end Arama_Durum,
+case when c.new_IYSEPosta=1 then 'izinli'
+	when c.new_IYSEPosta=0 then 'izinsiz'
+	when c.new_IYSEPosta is null then 'belirsiz'
+	end Email_Durum
+	,CAST(s.createdon AS DATE) [Satis Tarihi]
+	,s.new_projeidName Proje
+from new_satis s 
+LEFT JOIN contact c on C.contactId = s.new_contactid
+LEFT JOIN new_daire d on d.new_name = s.new_daireidName
+LEFT JOIN new_proje p on p.new_projeId = s.new_projeid
+where 1=1
+--nd c.YomiFullName = 'SÜLEYMAN TEKİN'
+--AND c.MobilePhone = '05323038063'
+--and c.MobilePhone = '05322328192'
+--and p.new_name = 'ÇAMLIYAKA KONAKLARI'
+and s.statecode=0 
+and c.new_milliyet = 1
+
+-----------------------------------update-------------------------------------
+
+
+update new_daire
+set new_daire.new_kdvdahildolarlistefiyat = ( select [List Price With Rent Guaranteed ] from [dbo].['Table 1$']
+where new_daire.new_blok = [dbo].['Table 1$'].Block and new_daire.new_daireno = [dbo].['Table 1$'].Number and new_daire.new_brtm2 = [dbo].['Table 1$'].[Gross M2]
+)
+where 1=1
+and new_daire.new_projeidName like '%RADISSON BLU BATIŞEHİR%'
+
+------------------------------------update telefon gorusmesi-------------------------
+
+
+
+UPDATE R
+SET R.new_Kampanya = C.CampaignId
+FROM dbo.PhoneCall AS R
+INNER JOIN dbo.new_webform AS P
+ON R.new_webformid = P.new_webformId
+INNER JOIN dbo.Campaign as C
+ON P.new_utmmedium=C.CodeName
+WHERE 1=1
+AND R.new_webformid is not null 
+and R.new_Kampanya is null 
+and P.new_utmmedium is not null
+--and R.subject like '%Web Arama%'
+
+
+
+select * 
+FROM dbo.PhoneCall AS R
+INNER JOIN dbo.new_webform AS P
+ON R.new_webformid = P.new_webformId
+INNER JOIN dbo.Campaign as C
+ON P.new_utmmedium=C.CodeName
+WHERE 1=1
+AND R.new_webformid is not null 
+and R.new_Kampanya is null 
+and P.new_utmmedium is not null
+and R.subject like '%Web Arama%'
+
+-------------------------------------kampanya kanal update
+
+
+UPDATE R
+SET R.new_KampanyaKanalSecimi = C.new_kampanyakanalId
+FROM dbo.PhoneCall AS R
+INNER JOIN dbo.new_webform AS P
+ON R.new_webformid = P.new_webformId
+INNER JOIN dbo.new_kampanyakanal as C
+ON P.new_utmsource=C.new_name
+WHERE 1=1
+AND R.new_webformid is not null 
+and R.new_Kampanya is null 
+and P.new_utmmedium is not null
+--and R.subject like '%Web Arama%'
+
+
+
+select R.subject, R.new_Kampanya, R.new_KampanyaKanalSecimi,R.RegardingObjectIdName,P.new_utmsource,c.new_kampanyakanalId,c.new_name
+FROM dbo.PhoneCall AS R
+INNER JOIN dbo.new_webform AS P
+ON R.new_webformid = P.new_webformId
+INNER JOIN dbo.new_kampanyakanal as C
+ON P.new_utmsource=C.new_name
+WHERE 1=1
+AND R.new_webformid is not null 
+and R.new_Kampanya is null 
+and P.new_utmmedium is not null
+and R.subject like '%Web Arama%'
+
+---------------------sms son-------------
+
+select distinct MobilePhone from contact where new_IYSSMS=1
+and statecode=0 
+and len(MobilePhone)=11  
+and left(MobilePhone,2)='05'
+
+select distinct EMailAddress1 from contact where new_IYSEPosta=1
+and statecode=0 
+--and new_milliyet = 1
+
+------------------update with case when&join 
+
+select u.[new_SatisDovizTuru],s.new_satisdoviz,
+case when s.new_satisdoviz = 2 then 'Dolar' 
+	 when s.new_satisdoviz = 1 then 'TL' end
+from new_daire u
+inner join new_satis s on u.new_daireId = s.new_daireid
+where 1=1
+and u.new_projeidName like '%RADISSON BLU%'
+
+
+update u
+set u.[new_SatisDovizTuru] = case when s.new_satisdoviz = 2 then 'Dolar' 
+	 when s.new_satisdoviz = 1 then 'TL' end
+from new_daire u
+inner join new_satis s on u.new_daireId = s.new_daireid
+where 1=1
+and u.new_projeidName like '%RADISSON BLU%'
+
+----------------update --------------------------
+
+select case when new_satisdurumu in (3,5,8) then cast(new_guncelfiyat as DECIMAL(15,2))
+			else cast(new_guncelfiyat*0.8 as DECIMAL(15,2)) end as [KDV Hariç Satış Geliri]
+from new_daire
+where 1=1
+and new_projeidName like '%Çamlıyaka%'
+--and new_satisdurumu <> 4
+
+update new_daire
+set new_KDVHaricSatisGeliri = case when new_satisdurumu in (3,5,8) then cast(new_guncelfiyat as DECIMAL(15,2))
+			else cast(new_guncelfiyat*0.8 as DECIMAL(15,2)) end
+from new_daire
+where 1=1
+
+--------------------------------------------------------------------------------------------
+
+select new_satisdurumu,sum(new_KDVHaricSatisGeliri) from new_daire
+where 1=1
+and new_projeidName = 'KORDON İSTANBUL'
+group by new_satisdurumu
+--and new_ada = 7025
+--and new_UygulamaTip <> 'Dükkan'
+--and new_satisdurumu not in ('4')
+--and new_name = 'KGT_7027-16_C_41'
+
+SELECT new_name,new_guncelfiyat,new_KDVHaricSatisGeliri
+from new_daire
+where 1=1
+and new_projeidName = 'KORDON İSTANBUL'
+and new_UygulamaTip = 'Dükkan'
+and new_satisdurumu in (1,6,7)
+
+--new_guncelfiyat*0.6375
+
+select 3644067.79661017*0.6375
+
+----------------------------------------------------------------------------------------------- cagri kalite
+
+update new_cagrikalite
+set new_ToplamPuanSkor = h.toplam
+from new_cagrikalite inner join 
+(select new_cagrikaliteId,sum(isnull(new_EtkinSelamlamaYeni,0)+isnull(new_sozcukKullanimi,0)+isnull(new_BekletmeKarlama,0)
++isnull(new_simKullanm,0)+isnull(new_EtkinDinlemeYeni,0)+isnull(new_MteriProfilihtiyacAnalizedildimi,0)
++isnull(new_MteriyenemliOlduuHissettirildimi,0)+isnull(new_CanlHevesliveGvenliSesTonuVarm,0)
++isnull(new_AlternatifSunuldumu,0)+isnull(new_YeterliknaabasGsterildimi,0)+isnull(new_ProjeAnlatm,0)
++isnull(new_UzunVadeliMterilikisiKurmaUurlama,0)+isnull(new_Sistemhakimiyetitamm,0)
++isnull(new_MteriBilgilerialma,0)+isnull(new_Referans,0)+isnull(new_TantmOnay,0)+isnull(new_TalepAlma,0)
++isnull(new_BONUS,0)) toplam from new_cagrikalite
+group by new_cagrikaliteId) h on new_cagrikalite.new_cagrikaliteId = h.new_cagrikaliteId
+
+
+----------------------------------------------- fırsat data
+
+
+select distinct c.FirstName Ad,c.LastName Soyad, c.MobilePhone Telefon,c.EMailAddress1 Email, p.new_name Proje
+from new_satisfirsat s 
+LEFT JOIN contact c on c.contactId = s.new_contactid
+LEFT JOIN new_proje p on p.new_projeId = s.new_projeid
+where 1=1
+and s.new_projeidName like '%CER%'
+and c.ContactId not in (select new_contactid from new_satis
+where 1=1
+and new_projeidName like '%CER%'
+AND statuscode =1)
+
+----------------------------------------------------------------------update komisyonlar daire kartı
+
+
+update d
+set d.new_komisyonkdvharicsatisgeliri = d.new_KDVHaricSatisGeliri2*(1-isnull(s.new_NetworkKomisyon,0)/100)
+from new_satis s
+left join new_daire d on d.new_daireId = s.new_daireid
+where 1=1
+--and d.new_projeidName like '%kordon%'
+--and d.new_name = 'KGT_7025-3_A_4'
+and s.statecode = 0
+
+update d
+set d.new_satiskomisyonorani = isnull(s.new_NetworkKomisyon,0)
+from new_satis s
+left join new_daire d on d.new_daireId = s.new_daireid
+where 1=1
+--and d.new_projeidName like '%kordon%'
+--and d.new_name = 'KGT_7025-3_A_4'
+and s.statecode = 0
+
+ 
+ 
+update sat
+set sat.new_odenenoran = s.tpl
+from new_satis sat
+inner join (
+select new_satisid, isnull(cast(sum(se.new_odenen)/s.new_fiyat as DECIMAL(15,2)),0) tpl
+from new_senet se
+left join new_satis s on se.new_satisid=s.new_satisId
+left join contact c on c.ContactId=s.new_Contactid
+where 1=1
+and s.statecode=0
+--and s.new_daireidName = 'KGT_7025-3_E_47'
+group by s.new_fiyat,s.new_odenenoran,new_satisid
+)s on sat.new_satisId = s.new_satisid
+
+-------------------------------------------------------------------------GUNLUK RAPOR SORGULARI-------------------------------------------------
+
+select top 10 * from [dbo].[GunlukGorusme]
+where 1=1
+and Proje = 'Batışehir'
+and Tarih = '2021-10-26'
+
+
+select top 10 * from [dbo].[GunlukRapor]
+where 1=1
+and Proje = 'Batışehir'
+and Tarih = '2021-10-26'
+
+select top 10 * from [dbo].[GunlukSatis]
+where 1=1
+and Proje = 'Batışehir'
+and Tarih = '2021-10-26'
+
+select top 10 * from 
+[dbo].[RandevuTarihleri]
+where 1=1
+and Proje = 'Batışehir'
+and Tarih = '2021-10-26'
+
+-----------------------------------------------------------------------kat no ayırma modernyaka-----------------
+
+SELECT new_blok+ '_'+new_daireno,
+case when REPLACE(STUFF(new_kat,4,10,''), '.', '') = 'ZEM' THEN 'Z' 
+ELSE REPLACE(STUFF(new_kat,4,10,''), '.', '') END from new_daire
+where 1=1
+and new_projeidName = 'MODERNYAKA'
+
+select new_blok+ '_'+new_daireno,new_kat,CASE when new_kat='1.BODRUM KAT' then '1B' 
+WHEN new_kat='ZEMİN KAT' then 'Z' WHEN LEN(NEW_KAT)=7 THEN LEFT(new_kat,2) else LEFT(new_kat,1) end 
+from new_daire
+where 1=1
+and new_projeidName = 'MODERNYAKA'
+
+------------------------------------tarih fonksiyonları
+
+select DATEADD(ww, DATEDIFF(ww,0,getdate())+0, +1)
+
+select dateadd(day,-1,getdate())
+
+select  CAST(CAST(GETDATE()-1 AS DATE) AS DATETIME)
+
+-----------------------------------------------------SQL GEÇMİŞ ARAMASI---------------
+
+SELECT t.[text]
+FROM sys.dm_exec_cached_plans AS p
+CROSS APPLY sys.dm_exec_sql_text(p.plan_handle) AS t
+WHERE t.[text] LIKE N'%DECLARE @BasTarih%';
+
+------------------------------------------------------sms Kordon datası----------------------------------------------------
+
+
+select distinct c.MobilePhone from contact c
+LEFT join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+--and c.CreatedOn >= '2021-04-27 21:00:00.000'
+and	p.new_ProjeName like '%KORDON%'
+and c.statecode=0 
+and len(MobilePhone)=11  
+and left(MobilePhone,2)='05'
+
+--------------------------------------------- sms proje hariç.------------------------------------------------------------------------
+
+
+select distinct c.MobilePhone--,c.statecode 
+--, p.new_ProjeName 
+from contact c
+LEFT join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+--and c.CreatedOn >= '2021-04-27 21:00:00.000'
+--and	(p.new_ProjeName <> 'KORDON İSTANBUL'  OR p.new_ProjeName <> 'RADISSON' or p.new_ProjeName is null)
+and c.statecode=0 
+and new_IYSSMS=1
+and len(MobilePhone)=11  
+and left(MobilePhone,2)='05'
+AND c.MobilePhone NOT in (select c.MobilePhone from new_satis s
+left join Contact c on c.ContactId=s.new_contactid
+where 1=1
+and s.statecode=0 
+and c.MobilePhone is not null
+and c.MobilePhone != ''
+and (s.new_projeidName like ('%BATIŞEHİR%')))
+AND c.MobilePhone NOT in (
+select distinct c.MobilePhone
+--, p.new_ProjeName 
+from contact c
+LEFT join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+and p.new_ProjeName = 'KORDON İSTANBUL'
+and c.MobilePhone is not null
+)
+AND c.MobilePhone NOT in (
+select distinct c.MobilePhone
+from contact c
+right join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+and p.new_ProjeName = 'RADISSON BLU'
+and c.MobilePhone is not null
+)
+
+
+----------------------------------------------------radisson blu sms datası
+
+
+select distinct c.MobilePhone--,c.statecode 
+--, p.new_ProjeName 
+from contact c
+LEFT join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+--and c.CreatedOn >= '2021-04-27 21:00:00.000'
+--and	(p.new_ProjeName <> 'KORDON İSTANBUL'  OR p.new_ProjeName <> 'RADISSON' or p.new_ProjeName is null)
+and c.statecode=0 
+and new_IYSSMS=1
+and len(MobilePhone)=11  
+and left(MobilePhone,2)='05'
+AND (c.MobilePhone in (select c.MobilePhone from new_satis s
+left join Contact c on c.ContactId=s.new_contactid
+where 1=1
+--and s.statecode=0 
+and c.MobilePhone is not null
+and c.MobilePhone != ''
+and s.new_projeidName like ('%BATIŞEHİR%')))
+
+
+select distinct c.MobilePhone--,c.statecode 
+--, p.new_ProjeName 
+from contact c
+LEFT join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+--and c.CreatedOn >= '2021-04-27 21:00:00.000'
+--and	(p.new_ProjeName <> 'KORDON İSTANBUL'  OR p.new_ProjeName <> 'RADISSON' or p.new_ProjeName is null)
+--and c.statecode=0 
+--and new_IYSSMS=1
+and len(MobilePhone)=11  
+and left(MobilePhone,2)='05'
+and c.MobilePhone in (
+select distinct c.MobilePhone
+from contact c
+right join new_ilgilendigiprojeler p on c.ContactId =p.new_musteri 
+where 1=1
+and p.new_ProjeName = 'RADISSON BLU'
+and c.MobilePhone is not null
+--and new_gorusmeturu = 13
+)
+
+----------------------------mailing---------------------------
+
+
+select distinct EMailAddress1 from new_satis s
+left join contact c on c.ContactId=s.new_contactid
+where 1=1
+and c.statecode=0 
+and new_IYSEPosta=1
+and s.statecode=0
+and c.new_milliyet = 1
+
+
+-----------------------satışlı musterı data
+
+
+select distinct MobilePhone from contact c
+right join new_satis s on c.ContactId = s.new_contactid
+where 1=1
+--and new_IYSSMS=1
+and s.statecode=0 
+--and len(MobilePhone)=11  
+--and left(MobilePhone,2)='05'
+and s.new_projeidName like '%CER%'
+AND c.new_milliyet = 1
