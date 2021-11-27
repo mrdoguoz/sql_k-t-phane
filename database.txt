@@ -1,4 +1,3 @@
-USE [egeyapi_MSCRM]
 
 musteri contact
 telefongorusmesi phonecall
